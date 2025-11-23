@@ -7,7 +7,7 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
+//GitHub相关操作工具类，用于封装获取GitHub相关信息的操作函数
 @Component
 public class GithubProvide {
     public String getAccessToken(AccessTokenDTO accessTokenDTO) throws IOException {

@@ -5,7 +5,8 @@ import cn.iayousa.community.dto.GithubUser;
 import cn.iayousa.community.mapper.UserMapper;
 import cn.iayousa.community.model.User;
 import cn.iayousa.community.provider.GithubProvide;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,7 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name =  "state") String state,
-                           HttpServletRequest request) throws IOException {
+                           HttpServletResponse response) throws IOException {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(clientSecret);
@@ -45,13 +46,16 @@ public class AuthorizeController {
         if(githubUser != null){
             //登陆成功
             User user = new User();
+            String token = UUID.randomUUID().toString(); //通过随机生成的UUID作为token
+            //把获取到的用户信息以及生成的token保存到数据库
             user.setName(githubUser.getName());
             user.setAccount_id(String.valueOf(githubUser.getId()));
-            user.setToken(UUID.randomUUID().toString());
+            user.setToken(token);
             user.setGmt_create(System.currentTimeMillis());
             user.setGmt_modified(System.currentTimeMillis());
             userMapper.insert(user);
-            request.getSession().setAttribute("user", githubUser);
+            //将token作为cookie保存到浏览器
+            response.addCookie(new Cookie("token", token));
         }
         else {
             //登陆失败
