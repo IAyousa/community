@@ -1,5 +1,5 @@
 package cn.iayousa.community.dto;
-
+//数据传输用类，存储GitHub用户信息
 public class GithubUser {
     private String name;
     private String bio;

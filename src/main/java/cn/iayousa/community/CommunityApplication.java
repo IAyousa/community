@@ -2,7 +2,7 @@ package cn.iayousa.community;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+//Web应用程序入口
 @SpringBootApplication
 public class CommunityApplication {
 
