@@ -7,12 +7,19 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 //GitHub相关操作工具类，用于封装获取GitHub相关信息的操作函数
 @Component
 public class GithubProvide {
     public String getAccessToken(AccessTokenDTO accessTokenDTO) throws IOException {
         MediaType mediaType = MediaType.get("application/json");
-        OkHttpClient client = new OkHttpClient();
+        // 创建带超时配置的 OkHttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)  // 连接超时 30秒
+                .readTimeout(60, TimeUnit.SECONDS)     // 读取超时 30秒
+                .writeTimeout(60, TimeUnit.SECONDS)    // 写入超时 30秒
+                .build();
 
         RequestBody body = RequestBody.create(JSON.toJSONString(accessTokenDTO), mediaType);
         Request request = new Request.Builder()

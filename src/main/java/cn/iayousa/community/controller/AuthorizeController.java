@@ -49,10 +49,11 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString(); //通过随机生成的UUID作为token
             //把获取到的用户信息以及生成的token保存到数据库
             user.setName(githubUser.getName());
-            user.setAccount_id(String.valueOf(githubUser.getId()));
+            user.setAccountId(String.valueOf(githubUser.getId()));
             user.setToken(token);
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(System.currentTimeMillis());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(System.currentTimeMillis());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             userMapper.insert(user);
             //将token作为cookie保存到浏览器
             response.addCookie(new Cookie("token", token));
