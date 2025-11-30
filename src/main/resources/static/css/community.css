@@ -9,3 +9,10 @@ body{
 .btn-publish{
     float: right;
 }
+.media-block{
+    padding: 10px;
+}
+.avatar-img{
+    width: 45px;
+    height: 45px;
+}
