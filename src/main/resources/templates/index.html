@@ -56,11 +56,12 @@
         <div class="col-lg-9 col-md-12">
             <h2><i class="bi bi-card-list"></i>发现</h2>
             <hr>
-            <div class="d-flex media-block" th:each="question : ${questions}">
+            <div class="d-flex media-block" th:each="question : ${pagination.data}">
                 <div class="flex-shrink-0">
                     <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
                 </div>
                 <div class="flex-grow-1 ms-3">
+                    <h5 th:text="${question.title}"></h5>
                     <span th:text="${question.description}"></span>
                     <!-- 灰色小字描述 -->
                     <br>
@@ -76,6 +77,34 @@
                     </small>
                 </div>
             </div>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item" th:if="${pagination.showFirstPage}">
+                        <a class="page-link" th:href="@{/(page=1)}" aria-label="First-page">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${pagination.showPreviousPage}">
+                        <a class="page-link" th:href="@{/(page = ${pagination.page - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="page : ${pagination.pages}" th:classappend="${page == pagination.page}? 'active': ''">
+                        <a class="page-link" th:href="@{/(page = ${page})}" th:text="${page}"></a>
+                    </li>
+                    <li class="page-item" th:if="${pagination.showNextPage}">
+                        <a class="page-link" th:href="@{/(page = ${pagination.page + 1})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${pagination.showEndPage}">
+                        <a class="page-link" th:href="@{/(page = ${pagination.totalPage})}" aria-label="End-page">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
         <div class="col-lg-3 col-md-12">
             <h4>热门话题</h4>

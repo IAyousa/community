@@ -1,5 +1,6 @@
 package cn.iayousa.community.service;
 
+import cn.iayousa.community.dto.PaginationDTO;
 import cn.iayousa.community.dto.QuestionDTO;
 import cn.iayousa.community.mapper.QuestionMapper;
 import cn.iayousa.community.mapper.UserMapper;
@@ -20,9 +21,18 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDTO> list() {
-        List<Question> questions = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+        Integer offset = (page - 1) * size;
+        List<Question> questions = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
+        PaginationDTO paginationDTO = new PaginationDTO();
+
+        Integer totalCount = questionMapper.count();
+        Integer totalPage = totalCount / size + (totalCount % size == 0 ? 0 : 1);
+        if(page < 1) {page = 1;}
+        if(page > totalPage) {page = totalPage;}
+        paginationDTO.setPagination(totalPage, page);
+
         for (Question question : questions) {
             User user = userMapper.findById(question.getCreatorId());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -30,6 +40,9 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        return questionDTOS;
+
+        paginationDTO.setData(questionDTOS);
+
+        return paginationDTO;
     }
 }
