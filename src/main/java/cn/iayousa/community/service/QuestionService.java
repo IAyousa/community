@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//Service 类封装业务流程，或者说是纯粹的界面上的业务流程
+//用于管理question表的业务操作
 @Service
 public class QuestionService {
     @Autowired
@@ -23,11 +24,42 @@ public class QuestionService {
 
     public PaginationDTO list(Integer page, Integer size) {
         Integer offset = (page - 1) * size;
+        if (offset < 0){
+            offset = 0;
+        }
         List<Question> questions = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
 
         Integer totalCount = questionMapper.count();
+        Integer totalPage = totalCount / size + (totalCount % size == 0 ? 0 : 1);
+        if(page < 1) {page = 1;}
+        if(page > totalPage) {page = totalPage;}
+        paginationDTO.setPagination(totalPage, page);
+
+        for (Question question : questions) {
+            User user = userMapper.findById(question.getCreatorId());
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOS.add(questionDTO);
+        }
+
+        paginationDTO.setData(questionDTOS);
+
+        return paginationDTO;
+    }
+
+    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+        Integer offset = (page - 1) * size;
+        if (offset < 0){
+            offset = 0;
+        }
+        List<Question> questions = questionMapper.listByUserId(userId, offset, size);
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+        PaginationDTO paginationDTO = new PaginationDTO();
+
+        Integer totalCount = questionMapper.countByUserId(userId);
         Integer totalPage = totalCount / size + (totalCount % size == 0 ? 0 : 1);
         if(page < 1) {page = 1;}
         if(page > totalPage) {page = totalPage;}

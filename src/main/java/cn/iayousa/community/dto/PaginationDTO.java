@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//数据传输用类，存储分页查询得到的数据信息
 @Data
 public class PaginationDTO<T> {
     private List<T> data;

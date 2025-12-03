@@ -1,23 +1,21 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>社区主页</title>
+    <title th:text="${sectionName}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/community.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <script src="/js/bootstrap.bundle.js"></script>
-    <!--    &lt;!&ndash; 使用Thymeleaf正确引用本地Bootstrap &ndash;&gt;-->
-<!--    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">-->
-<!--    &lt;!&ndash; 引入bootstrap.bundle.min.js（包含Popper） &ndash;&gt;-->
-<!--    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
 </head>
 <body>
 <div th:replace="~{navigation :: nav}"></div>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12">
-            <h2><i class="bi bi-card-list"></i>发现</h2>
+            <h2>
+                <span th:text="${sectionName}"></span>
+            </h2>
             <hr>
             <div class="d-flex media-block" th:each="question : ${pagination.data}">
                 <div class="flex-shrink-0">
@@ -25,7 +23,6 @@
                 </div>
                 <div class="flex-grow-1 ms-3">
                     <h5 th:text="${question.title}"></h5>
-                    <span th:text="${question.description}"></span>
                     <!-- 灰色小字描述 -->
                     <br>
                     <small class="text-body-secondary">
@@ -44,36 +41,44 @@
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <li class="page-item" th:if="${pagination.showFirstPage}">
-                        <a class="page-link" th:href="@{/(page=1)}" aria-label="First-page">
+                        <a class="page-link" th:href="@{'/profile/'+${section}(page=${1})}" aria-label="First-page">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item" th:if="${pagination.showPreviousPage}">
-                        <a class="page-link" th:href="@{/(page = ${pagination.page - 1})}" aria-label="Previous">
+                        <a class="page-link" th:href="@{'/profile/'+${section}(page=${pagination.page - 1})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li class="page-item" th:each="page : ${pagination.pages}" th:classappend="${page == pagination.page}? 'active': ''">
-                        <a class="page-link" th:href="@{/(page = ${page})}" th:text="${page}"></a>
+                        <a class="page-link" th:href="@{'/profile/'+${section}(page=${page})}" th:text="${page}"></a>
                     </li>
                     <li class="page-item" th:if="${pagination.showNextPage}">
-                        <a class="page-link" th:href="@{/(page = ${pagination.page + 1})}" aria-label="Next">
+                        <a class="page-link" th:href="@{'/profile/'+${section}(page=${pagination.page +1})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li class="page-item" th:if="${pagination.showEndPage}">
-                        <a class="page-link" th:href="@{/(page = ${pagination.totalPage})}" aria-label="End-page">
+                        <a class="page-link" th:href="@{'/profile/'+${section}(page=${pagination.totalPage})}" aria-label="End-page">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
         </div>
-        <div class="col-lg-3 col-md-12">
-            <h4>热门话题</h4>
-            • 问题标题：请用简洁的语言描述您发布的问题<br>
-            • 问题补充：详细补充您的问题<br>
-            • 选择标签：选择一个或多个合适的标签，用逗号分隔<br>
+        <div class="col-lg-3 col-md-12 profile" >
+            <div class="list-group section">
+                <a href="/profile/questions" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                   th:classappend="${section == 'questions'}? 'active': ''">我的提问
+                </a>
+                <a href="/profile/replies" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                   th:classappend="${section == 'replies'}? 'active': ''">最新回复
+                    <span class="badge bg-primary rounded-pill">14</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">A third link item</a>
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">A fourth link item</a>
+                <a class="list-group-item list-group-item-action disabled">A disabled link item</a>
+            </div>
         </div>
     </div>
 

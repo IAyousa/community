@@ -1,9 +1,11 @@
 package cn.iayousa.community.controller;
 
 import cn.iayousa.community.mapper.QuestionMapper;
+import cn.iayousa.community.mapper.UserMapper;
 import cn.iayousa.community.model.Question;
 import cn.iayousa.community.model.User;
 import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PublishController {
+    @Autowired
+    UserMapper userMapper;
+
     @Autowired
     QuestionMapper questionMapper;
 
@@ -45,7 +50,19 @@ public class PublishController {
             return "publish";
         }
 
-        User user = (User) request.getSession().getAttribute("user");
+        //用户登陆检验
+        User user = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("token")) {
+                String token = cookie.getValue();
+                user = userMapper.findByToken(token);
+                if (user != null) {
+                    request.getSession().setAttribute("user", user);
+                }
+                break;
+            }
+        }
         if (user == null) {
             model.addAttribute("error", "用户未登录");
             return "publish";
