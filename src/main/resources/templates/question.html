@@ -28,7 +28,8 @@
                 <span th:text="${question.description}"></span>
             </div>
             <hr>
-            <a class="community-href" th:href="@{'/publish/'+${question.id}}">
+            <a class="community-href" th:href="@{'/publish/'+${question.id}}"
+               th:if="${session.user != null && session.user.id == question.user.id}">
                 <span><i class="bi bi-pencil-square"></i> 编辑</span>
             </a>
 

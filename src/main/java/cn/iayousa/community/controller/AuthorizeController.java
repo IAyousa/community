@@ -2,10 +2,11 @@ package cn.iayousa.community.controller;
 
 import cn.iayousa.community.dto.AccessTokenDTO;
 import cn.iayousa.community.dto.GithubUser;
-import cn.iayousa.community.mapper.UserMapper;
 import cn.iayousa.community.model.User;
 import cn.iayousa.community.provider.GithubProvide;
+import cn.iayousa.community.service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +22,7 @@ public class AuthorizeController {
     @Autowired
     private GithubProvide githubProvide;
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Value("${github.client.id}")
     private String clientId;
@@ -51,10 +52,8 @@ public class AuthorizeController {
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(System.currentTimeMillis());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             //将token作为cookie保存到浏览器
             response.addCookie(new Cookie("token", token));
         }
@@ -62,5 +61,19 @@ public class AuthorizeController {
             //登陆失败
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        //退出登录时
+        //移除session
+        request.getSession().removeAttribute("user");
+        //移除cookie
+        //方法为新创建一个cookie对象，并将其存储时间设置为0(即立即删除)
+        Cookie cookie =  new Cookie("token", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");  //设置与登录时相同的路径，确保能正确删除
+        response.addCookie(cookie);
+        return  "redirect:/";
     }
 }
