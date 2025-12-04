@@ -24,7 +24,9 @@
                     <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
                 </div>
                 <div class="flex-grow-1 ms-3">
-                    <h5 th:text="${question.title}"></h5>
+                    <h5>
+                        <a class="community-href" th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
+                    </h5>
                     <span th:text="${question.description}"></span>
                     <!-- 灰色小字描述 -->
                     <br>

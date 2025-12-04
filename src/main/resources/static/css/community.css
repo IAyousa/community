@@ -19,3 +19,12 @@ body{
 .profile .section{
     margin: 10px;
 }
+a.community-href{
+    color: #000000;
+    font-size:15px;
+    text-decoration: none;
+}
+a.community-href:hover{
+    color: #0d6efd;
+    cursor: pointer;
+}
