@@ -1,10 +1,7 @@
 package cn.iayousa.community.mapper;
 
 import cn.iayousa.community.model.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 //数据库交互用接口，用于管理question表的CRUD操作
@@ -27,4 +24,7 @@ public interface QuestionMapper {
 
     @Select("select * from question where id = #{id}")
     Question findById(@Param(value = "id") Integer id);
+
+    @Update("update question set title = #{title}, description = #{description}, tag = #{tag}, gmt_modified = #{gmtModified} where id = #{id}")
+    void update(Question question);
 }
