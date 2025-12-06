@@ -12,3 +12,6 @@
 ## 工具：
 [Git](https://git-scm.cn/)  
 [Bookstrap](https://v5.bootcss.com/docs/getting-started/download/)  
+
+## 常用命令
+mvn "-Dmybatis.generator.overwrite=true" mybatis-generator:generate
