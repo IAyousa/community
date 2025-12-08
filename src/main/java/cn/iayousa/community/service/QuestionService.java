@@ -2,6 +2,8 @@ package cn.iayousa.community.service;
 
 import cn.iayousa.community.dto.PaginationDTO;
 import cn.iayousa.community.dto.QuestionDTO;
+import cn.iayousa.community.exception.CustomizeErrorCode;
+import cn.iayousa.community.exception.CustomizeException;
 import cn.iayousa.community.mapper.QuestionMapper;
 import cn.iayousa.community.mapper.UserMapper;
 import cn.iayousa.community.model.Question;
@@ -96,6 +98,9 @@ public class QuestionService {
 
     public QuestionDTO findById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if(question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);UserExample userExample = new UserExample();
         userExample.createCriteria().
@@ -115,7 +120,10 @@ public class QuestionService {
         else{
             //已创建的问题
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.updateByPrimaryKeySelective(question);
+            int flag = questionMapper.updateByPrimaryKeySelective(question);
+            if(flag == 0){
+                throw new CustomizeException(CustomizeErrorCode.UPDATE_FAIL);
+            }
         }
     }
 }
