@@ -5,6 +5,7 @@ import cn.iayousa.community.dto.QuestionDTO;
 import cn.iayousa.community.exception.CustomizeErrorCode;
 import cn.iayousa.community.exception.CustomizeException;
 import cn.iayousa.community.mapper.QuestionMapper;
+import cn.iayousa.community.mapper.QuestionMapperExt;
 import cn.iayousa.community.mapper.UserMapper;
 import cn.iayousa.community.model.Question;
 import cn.iayousa.community.model.QuestionExample;
@@ -26,6 +27,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionMapperExt  questionMapperExt;
 
     public PaginationDTO list(Integer page, Integer size) {
         Integer offset = (page - 1) * size;
@@ -125,5 +129,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.UPDATE_FAIL);
             }
         }
+    }
+
+    public void incViewCount(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1L);
+        questionMapperExt.incViewCount(question);
     }
 }
