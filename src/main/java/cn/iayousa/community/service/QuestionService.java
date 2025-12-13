@@ -64,7 +64,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
         Integer offset = (page - 1) * size;
         if (offset < 0){
             offset = 0;
@@ -100,7 +100,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO findById(Integer id) {
+    public QuestionDTO findById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -131,7 +131,7 @@ public class QuestionService {
         }
     }
 
-    public void incViewCount(Integer id) {
+    public void incViewCount(Long id) {
         Question question = new Question();
         question.setId(id);
         question.setViewCount(1L);

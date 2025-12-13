@@ -1,12 +1,14 @@
 package cn.iayousa.community.advice;
 
+import cn.iayousa.community.dto.ResultDTO;
+import cn.iayousa.community.exception.CustomizeErrorCode;
 import cn.iayousa.community.exception.CustomizeException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
@@ -14,9 +16,16 @@ import java.util.Date;
 @ControllerAdvice
 public class CustomizeExceptionHandler {
     // 专门处理你的业务异常
+    @ResponseBody
     @ExceptionHandler(CustomizeException.class)
-    public ModelAndView handleCustomizeException(HttpServletRequest request,
+    public Object handleCustomizeException(HttpServletRequest request,
                                                  CustomizeException ex) {
+        String contentType = request.getContentType();
+
+        if(contentType.equals("application/json")){
+            return ResultDTO.errorOf(ex);
+        }
+
         ModelAndView mav = new ModelAndView("error");
 
         // 从异常中获取错误码和信息
@@ -30,9 +39,15 @@ public class CustomizeExceptionHandler {
     }
 
     // 处理其他未捕获的异常（作为兜底）
+    @ResponseBody
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleOtherException(HttpServletRequest request,
+    public Object handleOtherException(HttpServletRequest request,
                                              Exception ex) throws Exception {
+        String contentType = request.getContentType();
+
+        if(contentType.equals("application/json")){
+            return ResultDTO.errorOf(CustomizeErrorCode.SYSTEM_ERROR);
+        }
         // 这些异常由 ErrorController 处理
         // 抛出异常，让 ErrorController 接管
         throw ex;

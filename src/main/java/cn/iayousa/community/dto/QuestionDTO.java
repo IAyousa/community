@@ -5,12 +5,12 @@ import lombok.Data;
 //数据传输用类，存储从question表和user表中查询得到的数据信息
 @Data
 public class QuestionDTO {
-    private Integer id;
+    private Long id;
     private String title;
     private String description;
     private Long gmtCreate;
     private Long gmtModified;
-    private Integer creatorId;
+    private Long creatorId;
     private Long commentCount;
     private Long viewCount;
     private Long likeCount;
