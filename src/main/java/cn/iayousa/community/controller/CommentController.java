@@ -1,6 +1,7 @@
 package cn.iayousa.community.controller;
 
-import cn.iayousa.community.dto.CommentDTO;
+import cn.hutool.core.util.StrUtil;
+import cn.iayousa.community.dto.CommentCreateDTO;
 import cn.iayousa.community.dto.ResultDTO;
 import cn.iayousa.community.exception.CustomizeErrorCode;
 import cn.iayousa.community.model.Comment;
@@ -22,15 +23,18 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value =  "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if(user == null){
             return ResultDTO.errorOf(CustomizeErrorCode.USER_NOT_LOGIN);
         }
+        if(StrUtil.isBlank(commentCreateDTO.getContent())){
+            return ResultDTO.errorOf(CustomizeErrorCode.COMMENT_IS_EMPTY);
+        }
         Comment comment = new Comment();
-        BeanUtils.copyProperties(commentDTO, comment);
-        System.out.println(commentDTO.getParentId() + " " + commentDTO.getContent() + " " + commentDTO.getType());
+        BeanUtils.copyProperties(commentCreateDTO, comment);
+        System.out.println(commentCreateDTO.getParentId() + " " + commentCreateDTO.getContent() + " " + commentCreateDTO.getType());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentatorId(user.getId());

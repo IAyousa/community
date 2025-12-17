@@ -12,6 +12,22 @@
 <!--    &lt;!&ndash; 引入bootstrap.bundle.min.js（包含Popper） &ndash;&gt;-->
 <!--    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
 </head>
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var closable = localStorage.getItem("closable");
+        console.log('DOMContentLoaded触发, closable:', closable);
+
+        if (closable) {
+            console.log('准备关闭窗口...');
+            localStorage.removeItem("closable");
+
+            // 延迟关闭，确保页面完全加载
+            setTimeout(function() {
+                window.close();
+            }, 100);
+        }
+    });
+</script>
 <body>
 <div th:replace="~{navigation :: nav}"></div>
 <div class="container-fluid main">

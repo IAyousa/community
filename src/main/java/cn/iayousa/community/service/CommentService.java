@@ -1,16 +1,23 @@
 package cn.iayousa.community.service;
 
+import cn.iayousa.community.dto.CommentDTO;
 import cn.iayousa.community.enums.CommentTypeEnum;
 import cn.iayousa.community.exception.CustomizeErrorCode;
 import cn.iayousa.community.exception.CustomizeException;
 import cn.iayousa.community.mapper.CommentMapper;
 import cn.iayousa.community.mapper.QuestionMapper;
 import cn.iayousa.community.mapper.QuestionMapperExt;
-import cn.iayousa.community.model.Comment;
-import cn.iayousa.community.model.Question;
+import cn.iayousa.community.mapper.UserMapper;
+import cn.iayousa.community.model.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -22,6 +29,8 @@ public class CommentService {
 
     @Autowired
     private QuestionMapperExt questionMapperExt;
+    @Autowired
+    private UserMapper userMapper;
 
     @Transactional //Spring 框架中声明式事务管理的核心注解，它允许你通过简单的注解来管理数据库事务
     public void insert(Comment comment) {
@@ -51,5 +60,44 @@ public class CommentService {
             }
             commentMapper.insertSelective(comment);
         }
+    }
+
+    public List<CommentDTO> listById(Long id) {
+        CommentExample example = new CommentExample();
+        example.createCriteria()
+                .andParentIdEqualTo(id)
+                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+        example.setOrderByClause("gmt_create desc");
+        List<Comment> comments = commentMapper.selectByExample(example);
+
+        if(comments == null || comments.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        //获取去重的评论用户id
+        List<Long> commentators = new ArrayList<>(
+                comments.stream().map(
+                comment -> comment.getCommentatorId()
+                ).collect(Collectors.toSet())
+        );
+        //利用用户id建立与该用户对象的映射
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdIn(commentators);
+        List<User> users = userMapper.selectByExample(userExample);
+
+        Map<Long, User> userMap = users.stream().
+                collect(
+                        Collectors.toMap(User::getId, user -> user)
+                );
+        //利用评论列表和用户列表构造传输用的评论对象
+        List<CommentDTO> commentDTOS = comments.stream().map(
+                comment -> {
+                    CommentDTO commentDTO = new CommentDTO();
+                    BeanUtils.copyProperties(comment, commentDTO);
+                    commentDTO.setUser(userMap.get(comment.getCommentatorId()));
+                    return commentDTO;
+                }).collect(Collectors.toList());
+        return commentDTOS;
+
     }
 }

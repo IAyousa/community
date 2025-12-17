@@ -44,8 +44,8 @@ public class CustomizeExceptionHandler {
     public Object handleOtherException(HttpServletRequest request,
                                              Exception ex) throws Exception {
         String contentType = request.getContentType();
-
-        if(contentType.equals("application/json")){
+        if(contentType.equals(null)){}
+        else if(contentType.equals("application/json")){
             return ResultDTO.errorOf(CustomizeErrorCode.SYSTEM_ERROR);
         }
         // 这些异常由 ErrorController 处理

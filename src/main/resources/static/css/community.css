@@ -28,3 +28,17 @@ a.community-href:hover{
     color: #0d6efd;
     cursor: pointer;
 }
+.comment-util{
+    margin-top: 10px;
+}
+.comment-util .icon{
+    margin-right: 5px;
+    font-size: 15px;
+}
+.comment-util .icon:hover{
+    color: #0d6efd;
+    cursor: pointer;
+}
+.comment-util .count{
+    margin-right:  15px;
+}
