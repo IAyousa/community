@@ -2,6 +2,7 @@ package cn.iayousa.community.controller;
 
 import cn.iayousa.community.dto.CommentDTO;
 import cn.iayousa.community.dto.QuestionDTO;
+import cn.iayousa.community.enums.CommentTypeEnum;
 import cn.iayousa.community.service.CommentService;
 import cn.iayousa.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Long id,
                            Model model){
         QuestionDTO questionDTO = questionService.findById(id);
-        List<CommentDTO> comments = commentService.listById(id);
+        List<CommentDTO> comments = commentService.listById(id, CommentTypeEnum.QUESTION);
         questionService.incViewCount(id);
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);

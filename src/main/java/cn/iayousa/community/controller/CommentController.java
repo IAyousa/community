@@ -2,7 +2,9 @@ package cn.iayousa.community.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.iayousa.community.dto.CommentCreateDTO;
+import cn.iayousa.community.dto.CommentDTO;
 import cn.iayousa.community.dto.ResultDTO;
+import cn.iayousa.community.enums.CommentTypeEnum;
 import cn.iayousa.community.exception.CustomizeErrorCode;
 import cn.iayousa.community.model.Comment;
 import cn.iayousa.community.model.User;
@@ -11,10 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class CommentController {
@@ -40,5 +41,12 @@ public class CommentController {
         comment.setCommentatorId(user.getId());
         commentService.insert(comment);
         return ResultDTO.successOf();
+    }
+
+    @ResponseBody
+    @RequestMapping(value =  "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id) {
+        List<CommentDTO> commentDTOS = commentService.listById(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.successOf(commentDTOS);
     }
 }

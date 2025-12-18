@@ -4,10 +4,7 @@ import cn.iayousa.community.dto.CommentDTO;
 import cn.iayousa.community.enums.CommentTypeEnum;
 import cn.iayousa.community.exception.CustomizeErrorCode;
 import cn.iayousa.community.exception.CustomizeException;
-import cn.iayousa.community.mapper.CommentMapper;
-import cn.iayousa.community.mapper.QuestionMapper;
-import cn.iayousa.community.mapper.QuestionMapperExt;
-import cn.iayousa.community.mapper.UserMapper;
+import cn.iayousa.community.mapper.*;
 import cn.iayousa.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +26,11 @@ public class CommentService {
 
     @Autowired
     private QuestionMapperExt questionMapperExt;
+
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentMapperExt commentMapperExt;
 
     @Transactional //Spring 框架中声明式事务管理的核心注解，它允许你通过简单的注解来管理数据库事务
     public void insert(Comment comment) {
@@ -59,14 +59,17 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insertSelective(comment);
+            dbComment.setCommentCount(1L);
+            commentMapperExt.incCommentCount(dbComment);
         }
     }
 
-    public List<CommentDTO> listById(Long id) {
+    public List<CommentDTO> listById(Long id, CommentTypeEnum commentTypeEnum) {
         CommentExample example = new CommentExample();
+        Integer type = commentTypeEnum.getType();
         example.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type);
         example.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(example);
 

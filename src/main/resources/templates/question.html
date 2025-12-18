@@ -2,10 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="${question.title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/community.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- 国内CDN镜像 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
     <script src="/js/bootstrap.bundle.js"></script>
     <script src="/js/community.js"></script>
 </head>
@@ -56,20 +57,38 @@
                         <!-- 灰色小字描述 -->
                         <br>
                         <small class="text-body-secondary comment-util">
-                        <span>
-                            <i class="bi bi-hand-thumbs-up icon"></i>
-                            <span  th:text="${comment.likeCount}" class="count"></span>
-                        </span>
-                            <span><i class="bi bi-chat-left-dots icon"></i></span>
+                            <button class="btn" type="button">
+                                <i class="bi bi-hand-thumbs-up icon"></i>
+                                <span th:text="${comment.likeCount}" class="count"></span>
+                            </button>
+
+                            <button class="btn" type="button" data-bs-toggle="collapse"
+                                    th:data-bs-target="'#collapse-' + ${comment.id}" aria-expanded="false"
+                                    th:aria-controls="'#collapse-' + ${comment.id}" th:data-id="${comment.id}">
+                                <i class="bi bi-chat-left-dots icon"></i>
+                                <span th:text="${comment.commentCount ?: 0}"></span>
+                            </button>
                             <span class="float-end" th:text="${#dates.format(comment.gmtCreate, 'yyyy-MM-dd')}"></span>
                         </small>
+                        <!--二级评论-->
+                        <div class="collapse sub-comments" th:id="${'collapse-'+comment.id}">
+                            <div class="sub-comments-container" th:id="${'sub-comments-'+comment.id}">
+                                <!-- 二级评论将在这里动态加载 -->
+                            </div>
+                            <br>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="请输入回复内容"
+                                       aria-label="请输入回复内容" th:id="${'input-'+ comment.id}">
+                                <button class="btn btn-success btn-reply" type="button" th:data-id="${comment.id}">回复</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <!--评论输入区-->
             <hr>
             <div>
-                <div class="d-flex media-block align-items-center" >
+                <div class="d-flex media-block align-items-center">
                     <div class="flex-shrink-0">
                         <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
                     </div>
@@ -77,9 +96,10 @@
                         <span th:text="${question.user.name}"></span>
                     </div>
                 </div>
-                <input type="hidden" th:value="${question.id}" id="question_id" />
+                <input type="hidden" th:value="${question.id}" id="question_id"/>
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                              style="height: 100px"></textarea>
                     <label for="floatingTextarea2">Comments</label>
                     <br>
                     <button type="submit" class="btn btn-success btn-publish" onclick="post()">回复</button>
@@ -90,7 +110,7 @@
         <div class="col-lg-3 col-md-12">
             <div>
                 <h5>发起人 </h5>
-                <div class="d-flex media-block" >
+                <div class="d-flex media-block">
                     <div class="flex-shrink-0">
                         <img th:src="${question.user.avatarUrl}" class="rounded-circle avatar-img" alt="test">
                     </div>
