@@ -52,3 +52,243 @@ button[aria-expanded="true"] .bi-chat-left-dots {
     border-radius: 5px;
     padding: 0 10px;
 }
+.question-tag{
+    margin-right: 5px;
+}
+.related-list{
+    list-style:  none;
+    padding: 0;
+}
+.related-list li{
+    margin-block: 10px ;
+}
+.related-list a{
+    color: #0d6efd;
+    text-decoration:  none;
+}
+.related-list a:hover{
+    color: #39c5bb;
+    cursor: pointer;
+}
+/* 标签选择组件样式 - 限制选择版本 */
+.selected-tags-container {
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+}
+
+.selected-count {
+    text-align: right;
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+.selected-count span {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.tag-category-container {
+    margin-top: 20px;
+}
+
+.tag-category-nav .nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag-category-nav .nav-link {
+    padding: 8px 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    background-color: white;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tag-category-nav .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.tag-category-nav .nav-link:hover:not(.active) {
+    background-color: #e9ecef;
+}
+
+.tag-display-container {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: white;
+}
+
+.tag-search {
+    max-width: 300px;
+}
+
+.tag-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+}
+
+.tag-option {
+    padding: 8px 12px;
+    background-color: white;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    user-select: none;
+    position: relative;
+}
+
+.tag-option:hover {
+    border-color: #adb5bd;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tag-option.selected {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.tag-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f8f9fa;
+}
+
+.tag-option .check-mark {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s;
+}
+
+.tag-option.selected .check-mark {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.selected-tag-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    animation: tagAppear 0.3s ease-out;
+}
+
+.selected-tag-item .remove-tag {
+    margin-left: 6px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.2);
+    transition: all 0.2s;
+}
+
+.selected-tag-item .remove-tag:hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+.popular-tags {
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+}
+
+.popular-tags h6 {
+    color: #495057;
+}
+
+#popularTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.popular-tag {
+    padding: 4px 10px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 15px;
+    font-size: 13px;
+    color: #856404;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.popular-tag:hover {
+    background-color: #ffeaa7;
+    transform: translateY(-1px);
+}
+
+/* 动画效果 */
+@keyframes tagAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .tag-list {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        max-height: 200px;
+    }
+
+    .tag-category-nav .nav-pills {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .tag-category-nav .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+}

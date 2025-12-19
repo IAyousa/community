@@ -1,5 +1,6 @@
 package cn.iayousa.community.service;
 
+import cn.hutool.core.util.StrUtil;
 import cn.iayousa.community.dto.PaginationDTO;
 import cn.iayousa.community.dto.QuestionDTO;
 import cn.iayousa.community.exception.CustomizeErrorCode;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 //Service 类封装业务流程，或者说是纯粹的界面上的业务流程
 //用于管理question表的业务操作
 @Service
@@ -36,8 +39,10 @@ public class QuestionService {
         if (offset < 0){
             offset = 0;
         }
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(
-                new QuestionExample(), new RowBounds(offset, size)
+                questionExample, new RowBounds(offset, size)
             );
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -136,5 +141,24 @@ public class QuestionService {
         question.setId(id);
         question.setViewCount(1L);
         questionMapperExt.incViewCount(question);
+    }
+
+    public List<QuestionDTO> listByRelatedTags(QuestionDTO queryDTO) {
+        if(StrUtil.isBlank(queryDTO.getTag())){
+            return new ArrayList<>();
+        }
+        String regexTag = StrUtil.replace(queryDTO.getTag(), ",", "|");
+        Question question = new Question();
+        question.setId(queryDTO.getId());
+        question.setTag(regexTag);
+
+        List<Question> questions = questionMapperExt.selectByRelatedTags(question);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+
+        return questionDTOS;
     }
 }

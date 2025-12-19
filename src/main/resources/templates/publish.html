@@ -8,6 +8,7 @@
     <!-- 国内CDN镜像 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
     <script src="/js/bootstrap.bundle.js"></script>
+    <script src="/js/community.js"></script>
 </head>
 <body>
 <div th:replace="~{navigation :: nav}"></div>
@@ -15,26 +16,93 @@
     <div class="row">
         <div class="col-lg-9 col-md-12">
             <h2><i class="bi bi-file-earmark-plus"></i>发布</h2>
-            <form action="/publish" method="post">
+            <form action="/publish" method="post" id="publishForm">
                 <input type="hidden" name="id" th:value="${id}"/>
+
                 <div class="mb-3">
                     <label for="title" class="form-label">问题标题:</label>
-                    <input type="text" class="form-control" th:value="${title}" id="title" name="title" placeholder="标题">
+                    <input type="text" class="form-control" th:value="${title}"
+                           id="title" name="title" placeholder="请输入问题标题" autocomplete="off">
                 </div>
+
                 <div class="mb-3">
                     <label for="description" class="form-label">问题描述:</label>
-                    <textarea class="form-control" th:text="${description}" id="description" name="description" rows="3"></textarea>
+                    <textarea class="form-control" th:text="${description}"
+                              id="description" name="description" rows="5"
+                              placeholder="详细描述您的问题"></textarea>
                 </div>
+
+                <!-- 标签选择组件 -->
                 <div class="mb-3">
-                    <label for="tag" class="form-label">添加标签:</label>
-                    <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag" placeholder="添加标签，以，隔开">
+                    <label class="form-label">选择标签:</label>
+
+                    <!-- 隐藏字段 -->
+                    <input type="hidden" id="tag" name="tag" th:value="${tag}">
+
+                    <!-- 已选标签展示区域 -->
+                    <div class="selected-tags-container mb-3">
+                        <div class="selected-tags" id="selectedTags">
+                            <span class="text-muted" id="noTagsHint">请从下方选择标签（最多可选5个）</span>
+                        </div>
+                        <div class="selected-count">
+                            已选择: <span id="selectedCount">0</span>/5 个标签
+                        </div>
+                    </div>
+
+                    <!-- 标签选择区域 -->
+                    <div class="tag-category-container">
+                        <!-- 分类标签 -->
+                        <div class="tag-category-nav mb-3">
+                            <div class="nav nav-pills" id="tagCategoryTabs">
+                                <button class="nav-link active" type="button" data-category="technology">
+                                    <i class="bi bi-code-slash"></i> 技术
+                                </button>
+                                <button class="nav-link" type="button" data-category="framework">
+                                    <i class="bi bi-box"></i> 框架
+                                </button>
+                                <button class="nav-link" type="button" data-category="language">
+                                    <i class="bi bi-file-code"></i> 语言
+                                </button>
+                                <button class="nav-link" type="button" data-category="other">
+                                    <i class="bi bi-three-dots"></i> 其他
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 标签显示区域 -->
+                        <div class="tag-display-container">
+                            <!-- 搜索框 -->
+                            <div class="tag-search mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" id="tagSearch"
+                                           placeholder="搜索标签..." autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- 标签列表 -->
+                            <div class="tag-list" id="tagList">
+                                <!-- 标签会动态加载到这里 -->
+                            </div>
+
+                            <!-- 热门标签 -->
+                            <div class="popular-tags mt-4">
+                                <h6 class="mb-2"><i class="bi bi-fire"></i> 热门标签</h6>
+                                <div id="popularTags">
+                                    <!-- 热门标签会动态加载 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- 错误提示区域 -->
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-                            <div class = "alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                            <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
                                  th:text="${error}"
-                                 th:if="${error!= null}">
+                                 th:if="${error != null}">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
