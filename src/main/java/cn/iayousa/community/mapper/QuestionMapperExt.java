@@ -1,5 +1,6 @@
 package cn.iayousa.community.mapper;
 
+import cn.iayousa.community.dto.QuestionQueryDTO;
 import cn.iayousa.community.model.Question;
 
 import java.util.List;
@@ -10,4 +11,8 @@ public interface QuestionMapperExt {
     int incCommentCount(Question record);
 
     List<Question> selectByRelatedTags(Question record);
+
+    Integer countBySearch(QuestionQueryDTO queryDTO);
+
+    List<Question> selectBySearch(QuestionQueryDTO queryDTO);
 }

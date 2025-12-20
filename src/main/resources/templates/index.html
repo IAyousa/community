@@ -63,25 +63,25 @@
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <li class="page-item" th:if="${pagination.showFirstPage}">
-                        <a class="page-link" th:href="@{/(page=1)}" aria-label="First-page">
+                        <a class="page-link" th:href="@{/(page=1,search=${search})}" aria-label="First-page">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item" th:if="${pagination.showPreviousPage}">
-                        <a class="page-link" th:href="@{/(page = ${pagination.page - 1})}" aria-label="Previous">
+                        <a class="page-link" th:href="@{/(page = ${pagination.page - 1},search=${search})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li class="page-item" th:each="page : ${pagination.pages}" th:classappend="${page == pagination.page}? 'active': ''">
-                        <a class="page-link" th:href="@{/(page = ${page})}" th:text="${page}"></a>
+                        <a class="page-link" th:href="@{/(page = ${page},search=${search})}" th:text="${page}"></a>
                     </li>
                     <li class="page-item" th:if="${pagination.showNextPage}">
-                        <a class="page-link" th:href="@{/(page = ${pagination.page + 1})}" aria-label="Next">
+                        <a class="page-link" th:href="@{/(page = ${pagination.page + 1},search=${search})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li class="page-item" th:if="${pagination.showEndPage}">
-                        <a class="page-link" th:href="@{/(page = ${pagination.totalPage})}" aria-label="End-page">
+                        <a class="page-link" th:href="@{/(page = ${pagination.totalPage},search=${search})}" aria-label="End-page">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
