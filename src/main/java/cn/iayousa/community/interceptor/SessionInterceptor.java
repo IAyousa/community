@@ -3,6 +3,7 @@ package cn.iayousa.community.interceptor;
 import cn.iayousa.community.mapper.UserMapper;
 import cn.iayousa.community.model.User;
 import cn.iayousa.community.model.UserExample;
+import cn.iayousa.community.service.NotificationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +18,8 @@ import java.util.List;
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -30,6 +33,9 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (!users.isEmpty()) {
                         request.getSession().setAttribute("user", users.get(0));
+                        // 更新Session中的未读数量
+                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
                     }
                     break;
                 }

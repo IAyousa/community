@@ -20,17 +20,16 @@ import java.util.stream.Collectors;
 public class CommentService {
     @Autowired
     private QuestionMapper questionMapper;
-
     @Autowired
     private CommentMapper commentMapper;
-
     @Autowired
     private QuestionMapperExt questionMapperExt;
-
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private CommentMapperExt commentMapperExt;
+    @Autowired
+    private NotificationService notificationService;
 
     @Transactional //Spring 框架中声明式事务管理的核心注解，它允许你通过简单的注解来管理数据库事务
     public void insert(Comment comment) {
@@ -51,6 +50,11 @@ public class CommentService {
             commentMapper.insertSelective(comment);
             dbQuestion.setCommentCount(1L);
             questionMapperExt.incCommentCount(dbQuestion);
+            // 发送通知
+            notificationService.createReplyQuestionNotification(
+                    comment.getCommentatorId(),
+                    dbQuestion.getId()
+            );
         }
         else{
             //回复评论
@@ -61,6 +65,11 @@ public class CommentService {
             commentMapper.insertSelective(comment);
             dbComment.setCommentCount(1L);
             commentMapperExt.incCommentCount(dbComment);
+            // 发送通知
+            notificationService.createReplyCommentNotification(
+                    comment.getCommentatorId(),
+                    dbComment.getId()
+            );
         }
     }
 

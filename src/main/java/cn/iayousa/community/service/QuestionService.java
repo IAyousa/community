@@ -34,7 +34,7 @@ public class QuestionService {
     @Autowired
     private QuestionMapperExt  questionMapperExt;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(Integer page, Integer size) {
         Integer offset = (page - 1) * size;
         if (offset < 0){
             offset = 0;
@@ -45,7 +45,7 @@ public class QuestionService {
                 questionExample, new RowBounds(offset, size)
             );
         List<QuestionDTO> questionDTOS = new ArrayList<>();
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
 
         Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         Integer totalPage = totalCount / size + (totalCount % size == 0 ? 0 : 1);
@@ -69,7 +69,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Long userId, Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(Long userId, Integer page, Integer size) {
         Integer offset = (page - 1) * size;
         if (offset < 0){
             offset = 0;
@@ -79,7 +79,7 @@ public class QuestionService {
         RowBounds rowBounds = new RowBounds(offset, size);
         List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, rowBounds);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
 
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorIdEqualTo(userId);
