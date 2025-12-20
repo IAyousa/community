@@ -70,6 +70,9 @@ button[aria-expanded="true"] .bi-chat-left-dots {
     color: #39c5bb;
     cursor: pointer;
 }
+.replies-menu a{
+    float: right;
+}
 /* 标签选择组件样式 - 限制选择版本 */
 .selected-tags-container {
     padding: 15px;

@@ -8,6 +8,7 @@
     <!-- 国内CDN镜像 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
     <script src="/js/bootstrap.bundle.js"></script>
+    <script src="/js/community.js"></script>
 </head>
 <body>
 <div th:replace="~{navigation :: nav}"></div>
@@ -18,24 +19,87 @@
                 <span th:text="${sectionName}"></span>
             </h2>
             <hr>
-            <div class="d-flex media-block" th:each="question : ${pagination.data}">
-                <div class="flex-shrink-0">
-                    <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
+            <div th:if="${section == 'questions'}">
+                <div class="d-flex media-block" th:each="question : ${pagination.data}">
+                    <div class="flex-shrink-0">
+                        <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5>
+                            <a class="community-href" th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
+                        </h5>
+                        <!-- 灰色小字描述 -->
+
+                        <small class="text-body-secondary">
+                            <i class="bi bi-person"></i>
+                            作者：<span th:text="${question.user.name}"></span> •
+                            <i class="bi bi-eye"></i>
+                            浏览 <span th:text="${question.viewCount}"></span> 次 •
+                            <i class="bi bi-chat"></i>
+                            评论 <span th:text="${question.commentCount}"></span> 条 •
+                            <i class="bi bi-clock"></i>
+                            创建时间 <span th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span>
+                            <a class="community-href" th:href="@{'/publish/'+${question.id}}"
+                               th:if="${session.user != null && session.user.id == question.user.id}">
+                                <span><i class="bi bi-pencil-square"></i> 编辑</span>
+                            </a>
+                        </small>
+                    </div>
                 </div>
-                <div class="flex-grow-1 ms-3">
-                    <h5 th:text="${question.title}"></h5>
-                    <!-- 灰色小字描述 -->
-                    <br>
-                    <small class="text-body-secondary">
-                        <i class="bi bi-person"></i>
-                        作者：<span th:text="${question.user.name}"></span> •
-                        <i class="bi bi-eye"></i>
-                        浏览 <span th:text="${question.viewCount}"></span> 次 •
-                        <i class="bi bi-chat"></i>
-                        评论 <span th:text="${question.commentCount}"></span> 条 •
-                        <i class="bi bi-clock"></i>
-                        创建时间 <span th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span>
-                    </small>
+            </div>
+
+            <div th:if="${section == 'replies'}">
+                <div class="list-group">
+                    <!-- 通知项 -->
+                    <div th:each="notification : ${pagination.data}"
+                         class="list-group-item">
+                        <div class="d-flex align-items-start">
+                            <!-- 头像 -->
+                            <img th:src="${notification.notifier.avatarUrl}"
+                                 class="rounded-circle me-3"
+                                 style="width: 40px; height: 40px;"
+                                 alt="头像">
+
+                            <div class="flex-grow-1">
+                                <!-- 通知者和时间 -->
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <strong th:text="${notification.notifier.name}"></strong>
+                                        <span class="ms-2 text-muted" th:text="${notification.typeName}"></span>
+                                        <span th:if="${notification.status == 0}"
+                                              class="badge bg-primary ms-2">新</span>
+                                    </div>
+                                    <small class="text-muted"
+                                           th:text="${#dates.format(notification.gmtCreate, 'MM-dd HH:mm')}"></small>
+                                </div>
+
+                                <!-- 具体内容 -->
+                                <div class="mb-2">
+                                    <div class="p-2 bg-light rounded border-start border-3 border-primary"
+                                         style="word-wrap: break-word;">
+                                        <small th:text="${notification.displayContent}"></small>
+                                    </div>
+                                </div>
+
+                                <!-- 操作按钮 -->
+
+                                <div class="replies-menu">
+                                    <a th:href="@{'/notification/' + ${notification.id}}"
+                                       th:if="${notification.type == 1 || notification.type == 2 || notification.type == 3}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> 查看
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 空状态 -->
+                    <div th:if="${#lists.isEmpty(pagination.data)}" class="text-center py-5">
+                        <i class="bi bi-bell-slash text-muted" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3 text-muted">暂无通知</h5>
+                    </div>
                 </div>
             </div>
 
@@ -74,11 +138,8 @@
                 </a>
                 <a href="/profile/replies" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                    th:classappend="${section == 'replies'}? 'active': ''">最新回复
-                    <span class="badge bg-primary rounded-pill">14</span>
+                    <span class="badge bg-primary rounded-pill" th:if="${session.unreadCount != 0}" th:text="${session.unreadCount}"></span>
                 </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">A third link item</a>
-                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">A fourth link item</a>
-                <a class="list-group-item list-group-item-action disabled">A disabled link item</a>
             </div>
         </div>
     </div>
