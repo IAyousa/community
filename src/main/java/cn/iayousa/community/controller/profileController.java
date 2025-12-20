@@ -3,7 +3,6 @@ package cn.iayousa.community.controller;
 import cn.iayousa.community.dto.NotificationDTO;
 import cn.iayousa.community.dto.PaginationDTO;
 import cn.iayousa.community.dto.QuestionDTO;
-import cn.iayousa.community.mapper.NotificationMapper;
 import cn.iayousa.community.model.User;
 import cn.iayousa.community.service.NotificationService;
 import cn.iayousa.community.service.QuestionService;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class profileController {
     @Autowired
     QuestionService questionService;
-    @Autowired
-    private NotificationMapper notificationMapper;
     @Autowired
     private NotificationService notificationService;
 

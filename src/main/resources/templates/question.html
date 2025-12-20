@@ -98,10 +98,10 @@
             <div>
                 <div class="d-flex media-block align-items-center">
                     <div class="flex-shrink-0">
-                        <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
+                        <img th:src="${session.user != null ? session.user.avatarUrl : '/img/defaultUser.png'}" class="rounded avatar-img" alt="test">
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <span th:text="${question.user.name}"></span>
+                        <span th:text="${session.user != null ? session.user.name : '未登陆用户'}"></span>
                     </div>
                 </div>
                 <input type="hidden" th:value="${question.id}" id="question_id"/>

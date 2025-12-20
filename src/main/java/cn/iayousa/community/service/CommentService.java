@@ -50,11 +50,13 @@ public class CommentService {
             commentMapper.insertSelective(comment);
             dbQuestion.setCommentCount(1L);
             questionMapperExt.incCommentCount(dbQuestion);
-            // 发送通知
-            notificationService.createReplyQuestionNotification(
-                    comment.getCommentatorId(),
-                    dbQuestion.getId()
-            );
+            // 发送通知（如果问题创建者不是评论者自己）
+            if (!dbQuestion.getCreatorId().equals(comment.getCommentatorId())) {
+                notificationService.createReplyQuestionNotification(
+                        comment.getCommentatorId(),
+                        dbQuestion.getId()
+                );
+            }
         }
         else{
             //回复评论
@@ -65,11 +67,13 @@ public class CommentService {
             commentMapper.insertSelective(comment);
             dbComment.setCommentCount(1L);
             commentMapperExt.incCommentCount(dbComment);
-            // 发送通知
-            notificationService.createReplyCommentNotification(
-                    comment.getCommentatorId(),
-                    dbComment.getId()
-            );
+            // 发送通知（如果父评论作者不是评论者自己）
+            if (!dbComment.getCommentatorId().equals(comment.getCommentatorId())) {
+                notificationService.createReplyCommentNotification(
+                        comment.getCommentatorId(),
+                        dbComment.getId()
+                );
+            }
         }
     }
 
