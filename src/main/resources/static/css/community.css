@@ -73,6 +73,9 @@ button[aria-expanded="true"] .bi-chat-left-dots {
 .replies-menu a{
     float: right;
 }
+.footer{
+    text-align: center;
+}
 /* 标签选择组件样式 - 限制选择版本 */
 .selected-tags-container {
     padding: 15px;
