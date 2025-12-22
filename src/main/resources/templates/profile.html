@@ -44,6 +44,9 @@
                                 <span><i class="bi bi-pencil-square"></i> 编辑</span>
                             </a>
                         </small>
+                        <button type="button" class="btn btn-danger btn-delete replies-menu" onclick="deleteQuestion(this)"
+                                th:data-id="${question.id}">delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -134,7 +137,7 @@
         <div class="col-lg-3 col-md-12 profile" >
             <div class="list-group section">
                 <a href="/profile/questions" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                   th:classappend="${section == 'questions'}? 'active': ''">我的提问
+                   th:classappend="${section == 'questions'}? 'active': ''">我的问题
                 </a>
                 <a href="/profile/replies" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                    th:classappend="${section == 'replies'}? 'active': ''">最新回复

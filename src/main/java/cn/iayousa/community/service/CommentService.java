@@ -68,7 +68,7 @@ public class CommentService {
             dbComment.setCommentCount(1L);
             commentMapperExt.incCommentCount(dbComment);
             // 发送通知（如果父评论作者不是评论者自己）
-            if (!dbComment.getCommentatorId().equals(comment.getCommentatorId())) {
+            if ( !dbComment.getCommentatorId().equals(comment.getCommentatorId())) {
                 notificationService.createReplyCommentNotification(
                         comment.getCommentatorId(),
                         dbComment.getId()

@@ -633,3 +633,14 @@ function testTagSelector() {
         window.tagSelector.addTag('测试标签');
     }
 }
+//删除问题
+function deleteQuestion(e) {
+    var questionId = e.getAttribute("data-id");
+    console.log(questionId);
+    var isDeleted = confirm("确认删除吗?");
+    if (isDeleted) {
+        window.location.replace("/profile/questions/delete/"+questionId);
+    }
+
+
+}
