@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -34,7 +35,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name =  "state") String state,
-                           HttpServletResponse response) throws IOException {
+                           HttpServletResponse response,
+                           RedirectAttributes redirectAttributes) throws IOException {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(clientSecret);
@@ -59,6 +61,8 @@ public class AuthorizeController {
         }
         else {
             //登陆失败
+            // 添加错误信息到重定向属性
+            redirectAttributes.addFlashAttribute("error", "GitHub登录失败，请重试");
         }
         return "redirect:/";
     }

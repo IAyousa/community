@@ -70,6 +70,9 @@ button[aria-expanded="true"] .bi-chat-left-dots {
     color: #39c5bb;
     cursor: pointer;
 }
+.question-menu button{
+    float: right;
+}
 .replies-menu a{
     float: right;
 }

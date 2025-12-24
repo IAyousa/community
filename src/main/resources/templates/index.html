@@ -32,6 +32,18 @@
 <body>
 <div th:replace="~{navigation :: nav}"></div>
 <div class="container-fluid main">
+    <!-- 在index.html的合适位置添加 -->
+    <div th:if="${error != null}" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span th:text="${error}"></span>
+        <!-- 可以添加重新登录的按钮 -->
+        <div class="mt-2">
+            <a th:href="@{/oauth2/authorization/github}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-github"></i> 重新登录
+            </a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div class="row">
         <div class="col-lg-9 col-md-12">
             <h2><i class="bi bi-card-list"></i>发现</h2>

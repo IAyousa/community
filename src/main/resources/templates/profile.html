@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${sectionName}"></title>
+    <title th:text="'个人中心-'+${sectionName}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/community.css">
@@ -24,7 +24,7 @@
                     <div class="flex-shrink-0">
                         <img th:src="${question.user.avatarUrl}" class="rounded avatar-img" alt="test">
                     </div>
-                    <div class="flex-grow-1 ms-3">
+                    <div class="flex-grow-1 ms-3 question-menu">
                         <h5>
                             <a class="community-href" th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                         </h5>
@@ -45,7 +45,7 @@
                             </a>
                         </small>
                         <button type="button" class="btn btn-danger btn-delete replies-menu" onclick="deleteQuestion(this)"
-                                th:data-id="${question.id}">delete
+                                th:data-id="${question.id}">删除
                         </button>
                     </div>
                 </div>
